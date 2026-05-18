@@ -1,4 +1,5 @@
 aiogram>=3.12.0
 aiohttp>=3.9.0
+vkbottle>=4.8.0
 python-dotenv>=1.0.0
 yoomoney>=2.0.0
