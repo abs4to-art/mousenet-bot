@@ -8,7 +8,6 @@ def main_menu() -> InlineKeyboardMarkup:
     builder.button(text="🎁 Пробный период 3 дня", callback_data="trial")
     builder.button(text="📍 Серверы", callback_data="servers")
     builder.button(text="👥 Реферальная программа", callback_data="referral")
-    builder.button(text="🏆 Конкурс", callback_data="contest")
     builder.button(text="🆘 Поддержка", callback_data="support")
     builder.adjust(1)
     return builder.as_markup()
@@ -43,14 +42,6 @@ def servers_keyboard() -> InlineKeyboardMarkup:
     builder.button(text="Литва 🇱🇹", callback_data="server_lithuania")
     builder.button(text="Казахстан 🇰🇿", callback_data="server_kazakhstan")
     builder.button(text="Сербия 🇷🇸", callback_data="server_serbia")
-    builder.button(text="⬅️ Назад", callback_data="back_main")
-    builder.adjust(1)
-    return builder.as_markup()
-
-
-def contest_keyboard() -> InlineKeyboardMarkup:
-    builder = InlineKeyboardBuilder()
-    builder.button(text="✅ Участвую", callback_data="contest_join")
     builder.button(text="⬅️ Назад", callback_data="back_main")
     builder.adjust(1)
     return builder.as_markup()

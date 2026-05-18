@@ -32,11 +32,6 @@ def init_db() -> None:
             created_at TEXT DEFAULT (datetime('now'))
         );
 
-        CREATE TABLE IF NOT EXISTS contest_participants (
-            user_id INTEGER PRIMARY KEY,
-            username TEXT,
-            created_at TEXT DEFAULT (datetime('now'))
-        );
     """)
     conn.commit()
     conn.close()
@@ -129,31 +124,6 @@ def get_referral_count(user_id: int) -> int:
     row = cur.fetchone()
     conn.close()
     return row["cnt"] if row else 0
-
-
-def add_contest_participant(user_id: int, username: str | None) -> bool:
-    conn = get_connection()
-    cur = conn.cursor()
-    try:
-        cur.execute(
-            "INSERT OR IGNORE INTO contest_participants (user_id, username) VALUES (?, ?)",
-            (user_id, username),
-        )
-        conn.commit()
-        return cur.rowcount > 0
-    except sqlite3.IntegrityError:
-        return False
-    finally:
-        conn.close()
-
-
-def is_contest_participant(user_id: int) -> bool:
-    conn = get_connection()
-    cur = conn.cursor()
-    cur.execute("SELECT user_id FROM contest_participants WHERE user_id = ?", (user_id,))
-    row = cur.fetchone()
-    conn.close()
-    return row is not None
 
 
 def get_all_users() -> list[sqlite3.Row]:

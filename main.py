@@ -7,7 +7,7 @@ from aiogram.enums import ParseMode
 
 from config import BOT_TOKEN
 from database import init_db
-from handlers import start, tariffs, trial, servers, referral, contest, support, admin
+from handlers import start, tariffs, trial, servers, referral, support, admin
 
 logging.basicConfig(
     level=logging.INFO,
@@ -33,7 +33,6 @@ async def main() -> None:
         trial.router,
         servers.router,
         referral.router,
-        contest.router,
         support.router,
         admin.router,
     )

@@ -16,7 +16,7 @@ async def support_info(callback: CallbackQuery):
         "🆘 <b>Поддержка Mouse.NET</b>\n\n"
         "Если у вас возникли вопросы или проблемы, свяжитесь с нами:\n\n"
         "✉️ <b>Написать администратору:</b>\n"
-        "Напишите сюда — @mousenet_support\n\n"
+        "Напишите сюда — @jolkj\n\n"
         "📧 <b>Email:</b>\n"
         "support@mousenet.example\n\n"
         "💬 <b>Ответы на частые вопросы:</b>\n"
