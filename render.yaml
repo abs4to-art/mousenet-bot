@@ -17,3 +17,21 @@ services:
         sync: false
       - key: YOOMONEY_NOTIFICATION_SECRET
         sync: false
+
+  - type: worker
+    name: mousenet-vk-bot
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m vk_bot.main
+    plan: free
+    envVars:
+      - key: VK_TOKEN
+        sync: false
+      - key: ADMIN_VK_IDS
+        sync: false
+      - key: YOOMONEY_CLIENT_ID
+        sync: false
+      - key: YOOMONEY_REDIRECT_URI
+        sync: false
+      - key: YOOMONEY_NOTIFICATION_SECRET
+        sync: false
