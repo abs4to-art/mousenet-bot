@@ -1,6 +1,6 @@
 # Mouse.NET VPN Bot 🐭
 
-Telegram-бот для VPN-сервиса Mouse.NET.
+Telegram-бот для VPN-сервиса Mouse.NET с приёмом платежей через ЮMoney.
 
 ## 1. Получение BOT_TOKEN
 
@@ -22,9 +22,20 @@ cp .env.example .env
 ```
 BOT_TOKEN=ваш_токен_от_BotFather
 ADMIN_IDS=ваш_telegram_id (можно получить у @userinfobot)
+
+YOOMONEY_RECEIVER=номер_кошелька_ЮMoney
+YOOMONEY_REDIRECT_URI=https://t.me/your_bot_username
+YOOMONEY_NOTIFICATION_SECRET=секрет_для_уведомлений
 ```
 
 Несколько админов через запятую: `123456789,987654321`
+
+### Настройка ЮMoney
+
+1. Зарегистрируйтесь в ЮMoney
+2. Получите `YOOMONEY_RECEIVER` — номер вашего кошелька
+3. Для вебхуков: укажите в настройках магазина URL `https://ваш-сервер.onrender.com/callback`
+4. `YOOMONEY_NOTIFICATION_SECRET` — задайте в настройках HTTP-уведомлений магазина
 
 ## 3. Запуск локально
 
@@ -36,13 +47,19 @@ pip install -r requirements.txt
 python main.py
 ```
 
+Для тестирования вебхуков локально используйте ngrok:
+```bash
+ngrok http 8080
+# Укажите полученный URL в настройках ЮMoney
+```
+
 ## 4. Заливка на GitHub
 
 ```bash
 git init
 git add .
 git commit -m "Initial commit: Mouse.NET VPN Bot"
-git remote add origin https://github.com/ВАШ_ЛОГИН/mousenet-bot.git
+git remote add origin https://github.com/abs4to-art/mousenet-bot.git
 git branch -M main
 git push -u origin main
 ```
@@ -62,8 +79,11 @@ git push -u origin main
 
 | Ключ | Значение |
 |------|----------|
-| `BOT_TOKEN` | Токен от @BotFather (секрет) |
+| `BOT_TOKEN` | Токен от @BotFather |
 | `ADMIN_IDS` | Telegram ID администраторов (через запятую) |
+| `YOOMONEY_RECEIVER` | Номер кошелька ЮMoney |
+| `YOOMONEY_REDIRECT_URI` | `https://t.me/your_bot_username` |
+| `YOOMONEY_NOTIFICATION_SECRET` | Секрет для уведомлений |
 
 **Не коммитьте `.env` в репозиторий!** Все секреты задаются через Environment Variables на Render.
 
@@ -71,20 +91,22 @@ git push -u origin main
 
 ```
 mousenet_bot/
-├── main.py              # Точка входа
-├── config.py            # Конфигурация (env)
-├── database.py          # Работа с SQLite
-├── keyboards.py         # Клавиатуры
+├── main.py                # Точка входа (polling + webhook)
+├── config.py              # Конфигурация (env)
+├── database.py            # SQLite: users, orders
+├── keyboards.py           # Inline-клавиатуры
+├── yoomoney_client.py     # Интеграция с ЮMoney
+├── webhook.py             # HTTP-эндпоинты для уведомлений
 ├── handlers/
 │   ├── __init__.py
-│   ├── start.py         # /start
-│   ├── tariffs.py       # Тарифы и оплата
-│   ├── trial.py         # Пробный период
-│   ├── servers.py       # Серверы
-│   ├── referral.py      # Реферальная система
-│   ├── contest.py       # Конкурс
-│   ├── support.py       # Поддержка
-│   └── admin.py         # Админ-панель
+│   ├── start.py           # /start + реферальные ссылки
+│   ├── tariffs.py         # Тарифы
+│   ├── payment.py         # Оплата через ЮMoney
+│   ├── trial.py           # Пробный период
+│   ├── servers.py         # Серверы
+│   ├── referral.py        # Реферальная система
+│   ├── support.py         # Поддержка
+│   └── admin.py           # Админ-панель
 ├── requirements.txt
 ├── render.yaml
 ├── .env.example
