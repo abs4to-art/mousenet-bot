@@ -22,7 +22,7 @@ class YooMoneyClient:
             paymentType="SB",
             sum=amount,
             label=label,
-            redirect_uri=self.redirect_uri,
+            successURL=self.redirect_uri,
         )
         return quickpay.base_url
 
