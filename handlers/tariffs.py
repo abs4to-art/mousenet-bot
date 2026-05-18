@@ -1,10 +1,9 @@
 import logging
 
-from aiogram import Router, types
+from aiogram import Router
 from aiogram.types import CallbackQuery
 
-from keyboards import tariffs_keyboard, tariff_action_keyboard, back_to_tariffs_keyboard
-from database import add_order
+from keyboards import tariffs_keyboard, tariff_action_keyboard
 
 logger = logging.getLogger(__name__)
 
@@ -80,26 +79,3 @@ async def show_tariff_detail(callback: CallbackQuery):
         reply_markup=tariff_action_keyboard(key),
     )
     await callback.answer()
-
-
-@router.callback_query(lambda c: c.data.startswith("pay_"))
-async def pay_tariff(callback: CallbackQuery):
-    tariff_map = {
-        "pay_regular": "Обычный VPN",
-        "pay_combined": "Обычный + обход",
-        "pay_bypass": "Только обход",
-    }
-    tariff_name = tariff_map.get(callback.data)
-    if not tariff_name:
-        await callback.answer("Неизвестный тариф")
-        return
-
-    user_id = callback.from_user.id
-    add_order(user_id, tariff_name)
-
-    await callback.message.edit_text(
-        f"✅ <b>Заявка на тариф «{tariff_name}» передана администратору!</b>\n\n"
-        "Ожидайте, скоро с вами свяжутся для оплаты и настройки.",
-        reply_markup=back_to_tariffs_keyboard(),
-    )
-    await callback.answer("Заявка отправлена!")

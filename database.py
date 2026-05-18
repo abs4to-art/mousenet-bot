@@ -29,10 +29,16 @@ def init_db() -> None:
             user_id INTEGER NOT NULL,
             tariff TEXT NOT NULL,
             status TEXT DEFAULT 'pending',
+            payment_label TEXT DEFAULT NULL,
             created_at TEXT DEFAULT (datetime('now'))
         );
-
     """)
+
+    cur.execute("PRAGMA table_info(orders)")
+    cols = [row["name"] for row in cur.fetchall()]
+    if "payment_label" not in cols:
+        cur.execute("ALTER TABLE orders ADD COLUMN payment_label TEXT DEFAULT NULL")
+
     conn.commit()
     conn.close()
     logger.info("Database initialized")
@@ -77,12 +83,12 @@ def use_trial(user_id: int) -> None:
     conn.close()
 
 
-def add_order(user_id: int, tariff: str) -> int:
+def add_order(user_id: int, tariff: str, payment_label: str | None = None) -> int:
     conn = get_connection()
     cur = conn.cursor()
     cur.execute(
-        "INSERT INTO orders (user_id, tariff) VALUES (?, ?)",
-        (user_id, tariff),
+        "INSERT INTO orders (user_id, tariff, payment_label) VALUES (?, ?, ?)",
+        (user_id, tariff, payment_label),
     )
     conn.commit()
     order_id = cur.lastrowid
@@ -99,6 +105,29 @@ def get_pending_orders() -> list[sqlite3.Row]:
     rows = cur.fetchall()
     conn.close()
     return rows
+
+
+def get_order_by_label(label: str) -> sqlite3.Row | None:
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT id, user_id, tariff, status FROM orders WHERE payment_label = ?",
+        (label,),
+    )
+    row = cur.fetchone()
+    conn.close()
+    return row
+
+
+def get_order(order_id: int) -> sqlite3.Row | None:
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT id, user_id, tariff, status FROM orders WHERE id = ?", (order_id,)
+    )
+    row = cur.fetchone()
+    conn.close()
+    return row
 
 
 def confirm_order(order_id: int) -> None:

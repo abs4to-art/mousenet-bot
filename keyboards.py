@@ -31,12 +31,6 @@ def tariff_action_keyboard(tariff_key: str) -> InlineKeyboardMarkup:
     return builder.as_markup()
 
 
-def back_to_tariffs_keyboard() -> InlineKeyboardMarkup:
-    builder = InlineKeyboardBuilder()
-    builder.button(text="⬅️ Назад к тарифам", callback_data="tariffs")
-    return builder.as_markup()
-
-
 def servers_keyboard() -> InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
     builder.button(text="Литва 🇱🇹", callback_data="server_lithuania")

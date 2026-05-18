@@ -1,5 +1,5 @@
 services:
-  - type: worker
+  - type: web
     name: mousenet-bot
     env: python
     buildCommand: pip install -r requirements.txt
@@ -9,4 +9,10 @@ services:
       - key: BOT_TOKEN
         sync: false
       - key: ADMIN_IDS
+        sync: false
+      - key: YOOMONEY_RECEIVER
+        sync: false
+      - key: YOOMONEY_REDIRECT_URI
+        sync: false
+      - key: YOOMONEY_NOTIFICATION_SECRET
         sync: false
